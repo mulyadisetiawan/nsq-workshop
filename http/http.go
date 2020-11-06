@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sharring_session/nsq/api/ovo"
+	"github.com/sharring_session/nsq/nsq-workshop/api/ovo"
+	"github.com/sharring_session/nsq/nsq-workshop/consumer"
 )
 
 func giveBenefit(w http.ResponseWriter, r *http.Request) {
@@ -61,5 +62,8 @@ func HandleRequests() {
 	http.HandleFunc("/givebenefit", giveBenefit)
 
 	http.HandleFunc("/giveovo", giveOVO)
+
+	consumer.ConsumeGiveBenefit()
+
 	log.Fatal(http.ListenAndServe(":10000", nil))
 }

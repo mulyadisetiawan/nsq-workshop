@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	handlerhttp "github.com/sharring_session/nsq/http"
+	handlerhttp "github.com/sharring_session/nsq/nsq-workshop/http"
 )
 
 func main() {
