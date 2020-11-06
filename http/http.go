@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sharring_session/nsq/api/ovo"
+	"github.com/sharing_session/nsq/api/ovo"
 )
 
 func giveBenefit(w http.ResponseWriter, r *http.Request) {
