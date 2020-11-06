@@ -1,10 +1,9 @@
 package ovo
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+
+	nsq "github.com/nsqio/go-nsq"
 )
 
 type Response struct {
@@ -14,26 +13,34 @@ type Response struct {
 
 func GiveBenefit(userID int) error {
 
-	resp, err := http.Get(fmt.Sprintf("http://localhost:10000/giveovo?user_id=%d", userID))
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
+	config := nsq.NewConfig()
+	w, _ := nsq.NewProducer("127.0.0.1:4150", config)
 
-	data, err := ioutil.ReadAll(resp.Body)
+	err := w.Publish("give_ovo", []byte(string(userID)))
 	if err != nil {
-		return err
+		return fmt.Errorf("Could not connect: " + err.Error())
 	}
 
-	var response Response
-	err = json.Unmarshal(data, &response)
-	if err != nil {
-		return err
-	}
+	// resp, err := http.Get(fmt.Sprintf("http://localhost:10000/giveovo?user_id=%d", userID))
+	// if err != nil {
+	// 	return err
+	// }
+	// defer resp.Body.Close()
 
-	if response.Code != "200" {
-		return fmt.Errorf("Error give ovo: " + response.Error)
-	}
+	// data, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// var response Response
+	// err = json.Unmarshal(data, &response)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// if response.Code != "200" {
+	// 	return fmt.Errorf("Error give ovo: " + response.Error)
+	// }
 
 	return nil
 }
