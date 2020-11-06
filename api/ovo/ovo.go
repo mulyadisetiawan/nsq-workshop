@@ -2,9 +2,8 @@ package ovo
 
 import (
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
+
+	"github.com/sharring_session/nsq/producer"
 )
 
 type Response struct {
@@ -12,28 +11,15 @@ type Response struct {
 	Error string `json:"error"`
 }
 
+type RequestOVO struct {
+	UserID int `json:"user_id"`
+}
+
 func GiveBenefit(userID int) error {
-
-	resp, err := http.Get(fmt.Sprintf("http://localhost:10000/giveovo?user_id=%d", userID))
+	req := RequestOVO{UserID: userID}
+	bytes, err := json.Marshal(req)
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-
-	data, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-
-	var response Response
-	err = json.Unmarshal(data, &response)
-	if err != nil {
-		return err
-	}
-
-	if response.Code != "200" {
-		return fmt.Errorf("Error give ovo: " + response.Error)
-	}
-
-	return nil
+	return producer.Publish(bytes)
 }
