@@ -2,15 +2,17 @@ package handlerhttp
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
-	"github.com/sharring_session/nsq/api/ovo"
+	"github.com/sharing_session/nsq-workshop/api/ovo"
+	"github.com/sharing_session/nsq-workshop/nsq"
+	"github.com/sharing_session/nsq-workshop/nsq/publisher"
 )
 
 func giveBenefit(w http.ResponseWriter, r *http.Request) {
-
 	userIDStr := r.URL.Query().Get("user_id")
 
 	userID, err := strconv.Atoi(userIDStr)
@@ -19,7 +21,7 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ovo.GiveBenefit(userID)
+	publisher.Publish(nsq.Topic_give_ovo, userID)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
@@ -52,6 +54,9 @@ func giveOVO(w http.ResponseWriter, r *http.Request) {
 		response.Error = "user id is empty"
 		return
 	}
+
+	fmt.Println("success")
+	fmt.Println("userID: ", userID)
 
 	response.Code = "200"
 	return
