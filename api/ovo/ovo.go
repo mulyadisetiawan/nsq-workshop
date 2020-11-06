@@ -5,11 +5,33 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	jsoniter "github.com/json-iterator/go"
+	"github.com/sharring_session/nsq-workshop/util"
+
+	"github.com/sharring_session/nsq-workshop/publisher"
 )
 
 type Response struct {
 	Code  string `json:"code"`
 	Error string `json:"error"`
+}
+
+type GiveBenefitNSQRequest struct {
+	UserID int `json:"user_id"`
+}
+
+func GiveBenefitNSQ(userID int) error {
+	giveBenefitNSQRequest := GiveBenefitNSQRequest{
+		UserID: userID,
+	}
+
+	dataPayload, err := jsoniter.Marshal(giveBenefitNSQRequest)
+	if err != nil {
+		return err
+	}
+
+	return publisher.Publish(util.TopicGiveBenefit, dataPayload)
 }
 
 func GiveBenefit(userID int) error {
