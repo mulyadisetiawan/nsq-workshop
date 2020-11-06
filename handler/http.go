@@ -1,4 +1,4 @@
-package handlerhttp
+package handler
 
 import (
 	"encoding/json"
@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/sharring_session/nsq/api/ovo"
+	"github.com/mulyadisetiawan/nsq-workshop/api/ovo"
+	"github.com/mulyadisetiawan/nsq-workshop/module"
 )
 
 func giveBenefit(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +20,7 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ovo.GiveBenefit(userID)
+	err = module.PublishGiveBenefit(userID)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
@@ -30,7 +31,6 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 }
 
 func giveOVO(w http.ResponseWriter, r *http.Request) {
-
 	userIDStr := r.URL.Query().Get("user_id")
 
 	var response ovo.Response
@@ -59,7 +59,7 @@ func giveOVO(w http.ResponseWriter, r *http.Request) {
 
 func HandleRequests() {
 	http.HandleFunc("/givebenefit", giveBenefit)
-
 	http.HandleFunc("/giveovo", giveOVO)
+
 	log.Fatal(http.ListenAndServe(":10000", nil))
 }
