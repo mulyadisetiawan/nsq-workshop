@@ -12,6 +12,10 @@ type Response struct {
 	Error string `json:"error"`
 }
 
+type GiveOVORequest struct {
+	UserID int `json:"user_id"`
+}
+
 func GiveBenefit(userID int) error {
 
 	resp, err := http.Get(fmt.Sprintf("http://localhost:10000/giveovo?user_id=%d", userID))
