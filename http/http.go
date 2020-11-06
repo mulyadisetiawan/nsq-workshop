@@ -29,37 +29,8 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func giveOVO(w http.ResponseWriter, r *http.Request) {
-
-	userIDStr := r.URL.Query().Get("user_id")
-
-	var response ovo.Response
-
-	defer func() {
-		resp, _ := json.Marshal(response)
-		w.Write(resp)
-	}()
-
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		response.Code = "300"
-		response.Error = err.Error()
-		return
-	}
-
-	if userID == 0 {
-		response.Code = "300"
-		response.Error = "user id is empty"
-		return
-	}
-
-	response.Code = "200"
-	return
-}
-
 func HandleRequests() {
 	http.HandleFunc("/givebenefit", giveBenefit)
 
-	http.HandleFunc("/giveovo", giveOVO)
 	log.Fatal(http.ListenAndServe(":10000", nil))
 }
