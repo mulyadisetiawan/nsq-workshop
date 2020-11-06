@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 
-	handlerhttp "github.com/sharring_session/nsq/http"
+	server "github.com/sharring_session/nsq/server"
 )
 
 func main() {
 	fmt.Println("RUNNING")
-	handlerhttp.HandleRequests()
+
+	server.InitConsumer()
+	server.HandleRequests()
 }

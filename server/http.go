@@ -1,4 +1,4 @@
-package handlerhttp
+package server
 
 import (
 	"encoding/json"
@@ -19,7 +19,13 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ovo.GiveBenefit(userID)
+	if userID == 0 {
+		w.Write([]byte("user id invalid"))
+		return
+	}
+
+	// post this topic during down
+	err = GetProducer().Publish("topic", []byte(userIDStr))
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
@@ -59,7 +65,7 @@ func giveOVO(w http.ResponseWriter, r *http.Request) {
 
 func HandleRequests() {
 	http.HandleFunc("/givebenefit", giveBenefit)
-
 	http.HandleFunc("/giveovo", giveOVO)
+
 	log.Fatal(http.ListenAndServe(":10000", nil))
 }
