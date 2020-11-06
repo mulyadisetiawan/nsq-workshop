@@ -34,6 +34,7 @@ func GiveBenefit(userID int) error {
 	if response.Code != "200" {
 		return fmt.Errorf("Error give ovo: " + response.Error)
 	}
+	fmt.Println("SUKSES GIVE OVO ", userID)
 
 	return nil
 }

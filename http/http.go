@@ -7,23 +7,19 @@ import (
 	"strconv"
 
 	"github.com/sharring_session/nsq/api/ovo"
+	nsq_publisher "github.com/sharring_session/nsq/nsq"
 )
 
-func giveBenefit(w http.ResponseWriter, r *http.Request) {
+const (
+	//TOPIC
+	NSQ_TOPIC_PUBLISH_GIVE_BENEFIT = "workshop_nsq_publish_ovo_henrys"
+)
+
+func giveBenefitNSQ(w http.ResponseWriter, r *http.Request) {
 
 	userIDStr := r.URL.Query().Get("user_id")
 
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		w.Write([]byte(err.Error()))
-		return
-	}
-
-	err = ovo.GiveBenefit(userID)
-	if err != nil {
-		w.Write([]byte(err.Error()))
-		return
-	}
+	nsq_publisher.Producer.Publish(NSQ_TOPIC_PUBLISH_GIVE_BENEFIT, []byte(userIDStr))
 
 	json.NewEncoder(w).Encode(string("success"))
 	return
@@ -58,7 +54,7 @@ func giveOVO(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleRequests() {
-	http.HandleFunc("/givebenefit", giveBenefit)
+	http.HandleFunc("/givebenefit", giveBenefitNSQ)
 
 	http.HandleFunc("/giveovo", giveOVO)
 	log.Fatal(http.ListenAndServe(":10000", nil))
