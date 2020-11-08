@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+type Request struct {
+	UserID int64 `json:"user_id"`
+}
+
 type Response struct {
 	Code  string `json:"code"`
 	Error string `json:"error"`
@@ -34,6 +38,8 @@ func GiveBenefit(userID int) error {
 	if response.Code != "200" {
 		return fmt.Errorf("Error give ovo: " + response.Error)
 	}
+
+	fmt.Println("success")
 
 	return nil
 }
