@@ -2,11 +2,13 @@ package handlerhttp
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/sharring_session/nsq/api/ovo"
+	nsqu "github.com/sharring_session/nsq/nsq"
 )
 
 func giveBenefit(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +21,7 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ovo.GiveBenefit(userID)
+	err = nsqu.Publish("myapp__give_ovo", fmt.Sprintf("%d", userID))
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
