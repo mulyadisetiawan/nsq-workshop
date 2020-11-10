@@ -2,6 +2,7 @@ package handlerhttp
 
 import (
 	"encoding/json"
+	mnsq "github.com/sharring_session/nsq/nsq"
 	"log"
 	"net/http"
 	"strconv"
@@ -18,6 +19,8 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
+
+	mnsq.Publish(mnsq.TopicGiveOvoBenefit, mnsq.OvoPayload{UserID: userID})
 
 	err = ovo.GiveBenefit(userID)
 	if err != nil {
