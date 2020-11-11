@@ -12,6 +12,7 @@ type Response struct {
 	Error string `json:"error"`
 }
 
+// deprecated
 func GiveBenefit(userID int) error {
 
 	resp, err := http.Get(fmt.Sprintf("http://localhost:10000/giveovo?user_id=%d", userID))
