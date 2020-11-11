@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/sharring_session/nsq/api/ovo"
+	"github.com/sharring_session/nsq/nsq"
 )
 
 func giveBenefit(w http.ResponseWriter, r *http.Request) {
@@ -19,7 +20,7 @@ func giveBenefit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = ovo.GiveBenefit(userID)
+	err = nsq.Publish("TopicGiveOVO", userID)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 		return
